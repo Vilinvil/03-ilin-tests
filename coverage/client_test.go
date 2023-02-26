@@ -99,15 +99,15 @@ func TestClient(t *testing.T) {
 	for caseNum, item := range cases {
 		result, err := testClient.FindUsers(item.Request)
 		if !reflect.DeepEqual(err, item.ResponseErr) {
-			t.Errorf("[%d] got unexpected error: %#v, expected: %#v", caseNum, err, item.ResponseErr)
+			t.Errorf("In TestClient: [%d] got unexpected error: %#v, expected: %#v", caseNum, err, item.ResponseErr)
 		}
 
 		if item.ResponseErr != nil && err == nil {
-			t.Errorf("[%d] got: %v expected error: %#v", caseNum, err, item.ResponseErr)
+			t.Errorf("In TestClient: [%d] got: %v expected error: %#v", caseNum, err, item.ResponseErr)
 		}
 
 		if !reflect.DeepEqual(item.Result, result) {
-			t.Errorf("[%d] wrong result, got: %#v, expected: %#v,", caseNum, result, item.Result)
+			t.Errorf("In TestClient: [%d] wrong result, got: %#v, expected: %#v,", caseNum, result, item.Result)
 		}
 	}
 	ts.Close()
@@ -131,21 +131,21 @@ func TestClientSpecificError(t *testing.T) {
 	client.Timeout = time.Microsecond
 	result, err = testClient.FindUsers(req)
 	if err.Error() != errorTimeout {
-		t.Errorf("Error is: %v. Result is: %v", err, result)
+		t.Errorf("In TestClientSpecificError: error is: %v. Result is: %v", err, result)
 	}
 	client.Timeout = time.Second
 
 	PatchDataSet = "wrongDataSet"
 	result, err = testClient.FindUsers(req)
 	if err.Error() != errorServer {
-		t.Errorf("Error is: %v. Result is: %v", err, result)
+		t.Errorf("In TestClientSpecificError: error is: %v. Result is: %v", err, result)
 	}
 	PatchDataSet = "data_set.xml"
 
 	testClient.URL = "wrongUrl"
 	result, err = testClient.FindUsers(req)
 	if err.Error() != errorWrongUrl {
-		t.Errorf("Error is: %v. Result is: %v", err, result)
+		t.Errorf("In TestClientSpecificError: error is: %v. Result is: %v", err, result)
 	}
 	ts.Close()
 }

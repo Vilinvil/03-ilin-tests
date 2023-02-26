@@ -97,18 +97,18 @@ func TestSearchServerParam(t *testing.T) {
 		resp := w.Result()
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			t.Errorf("[%d] failed to read body: %v", caseNum, err)
+			t.Errorf("In TestSearchServerParam: [%d] failed to read body: %v", caseNum, err)
 		}
 
 		bodyStr := string(body)
 		if bodyStr != item.Response {
-			t.Errorf("[%d] wrong Response: got %+v, expected %+v",
+			t.Errorf("In TestSearchServerParam: [%d] wrong Response: got %+v, expected %+v",
 				caseNum, bodyStr, item.Response)
 		}
 
 		err = resp.Body.Close()
 		if err != nil {
-			t.Errorf("[%d] resp.Body.Close() didn`t work. Error is: %+v",
+			t.Errorf("In TestSearchServerParam: [%d] resp.Body.Close() didn`t work. Error is: %+v",
 				caseNum, err)
 		}
 	}
@@ -170,29 +170,29 @@ func TestSearchServerErrors(t *testing.T) {
 		resp := w.Result()
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			t.Errorf("[%d] failed to read body: %v", caseNum, err)
+			t.Errorf("In TestSearchServerErrors: [%d] failed to read body: %v", caseNum, err)
 		}
 
 		var structErr SearchErrorResponse
 		err = json.Unmarshal(body, &structErr)
 		if err != nil {
 			fmt.Printf("%+v\n", structErr)
-			t.Errorf("couldn't json.Unmarshall %v. Error is %v", string(body), err)
+			t.Errorf("In TestSearchServerErrors: couldn't json.Unmarshall %v. Error is %v", string(body), err)
 		}
 
 		if resp.StatusCode != item.StatusCode {
-			t.Errorf("[%d] wrong StatusCode: got %+v, expected %+v",
+			t.Errorf("In TestSearchServerErrors: [%d] wrong StatusCode: got %+v, expected %+v",
 				caseNum, resp.StatusCode, item.StatusCode)
 		}
 
 		if !strings.Contains(structErr.Error, item.Response) {
-			t.Errorf("[%d] wrong Response: got %+v, expected %+v",
+			t.Errorf("In TestSearchServerErrors: [%d] wrong Response: got %+v, expected %+v",
 				caseNum, structErr.Error, item.Response)
 		}
 
 		err = resp.Body.Close()
 		if err != nil {
-			t.Errorf("[%d] resp.Body.Close() didn`t work. Error is: %+v",
+			t.Errorf("In TestSearchServerErrors: [%d] resp.Body.Close() didn`t work. Error is: %+v",
 				caseNum, err)
 		}
 	}
@@ -231,25 +231,29 @@ func TestSearchServerPatchDataSet(t *testing.T) {
 		resp := w.Result()
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			t.Errorf("[%d] failed to read body: %v", caseNum, err)
+			t.Errorf("In TestSearchServerPatchDataSet: [%d] failed to read body: %v", caseNum, err)
 		}
 
 		if resp.StatusCode != item.StatusCode {
-			t.Errorf("[%d] wrong StatusCode: got %+v, expected %+v",
+			t.Errorf("In TestSearchServerPatchDataSet: [%d] wrong StatusCode: got %+v, expected %+v",
 				caseNum, resp.StatusCode, item.StatusCode)
 		}
 
 		structErr := &SearchErrorResponse{}
 		err = json.Unmarshal(body, &structErr)
+		if err != nil {
+			t.Errorf("In TestSearchServerPatchDataSet: [%d] could`t Unmarshal SearchErrorResponse. Error is: %v",
+				caseNum, err)
+		}
 
 		if !strings.Contains(structErr.Error, item.Response) {
-			t.Errorf("[%d] wrong Response: got %+v, expected %+v",
+			t.Errorf("In TestSearchServerPatchDataSet: [%d] wrong Response: got %+v, expected %+v",
 				caseNum, structErr.Error, item.Response)
 		}
 
 		err = resp.Body.Close()
 		if err != nil {
-			t.Errorf("[%d] resp.Body.Close() didn`t work. Error is: %+v",
+			t.Errorf("In TestSearchServerPatchDataSet: [%d] resp.Body.Close() didn`t work. Error is: %+v",
 				caseNum, err)
 		}
 	}
@@ -261,19 +265,23 @@ func TestSearchServerSpecificError(t *testing.T) {
 	resp := w.Result()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		t.Errorf("Test on (*http.Request == nil) failed to read body: %v", err)
+		t.Errorf("In TestSearchServerSpecificError: test on (*http.Request == nil) failed to read body: %v", err)
 	}
 
 	structErr := &SearchErrorResponse{}
 	err = json.Unmarshal(body, &structErr)
+	if err != nil {
+		t.Errorf("In TestSearchServerSpecificError: could`t Unmarshal SearchErrorResponse. Error is: %v",
+			err)
+	}
 
 	if !strings.Contains(structErr.Error, ErrorServer.Error()) {
-		t.Errorf("Test on (*http.Request == nil) failed. Wrong Response: got %+v, expected %+v",
+		t.Errorf("In TestSearchServerSpecificError: test on (*http.Request == nil) failed. Wrong Response: got %+v, expected %+v",
 			structErr.Error, ErrorServer.Error())
 	}
 
 	err = resp.Body.Close()
 	if err != nil {
-		t.Errorf("resp.Body.Close() didn`t work. Error is: %+v", err)
+		t.Errorf("In TestSearchServerSpecificError: resp.Body.Close() didn`t work. Error is: %+v", err)
 	}
 }
