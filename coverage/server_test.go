@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http/httptest"
 	"strings"
 	"testing"
@@ -95,7 +95,7 @@ func TestSearchServerParam(t *testing.T) {
 		w := httptest.NewRecorder()
 		SearchServer(w, req)
 		resp := w.Result()
-		body, err := ioutil.ReadAll(resp.Body)
+		body, err := io.ReadAll(resp.Body)
 		if err != nil {
 			t.Errorf("In TestSearchServerParam: [%d] failed to read body: %v", caseNum, err)
 		}
@@ -168,7 +168,7 @@ func TestSearchServerErrors(t *testing.T) {
 		w := httptest.NewRecorder()
 		SearchServer(w, req)
 		resp := w.Result()
-		body, err := ioutil.ReadAll(resp.Body)
+		body, err := io.ReadAll(resp.Body)
 		if err != nil {
 			t.Errorf("In TestSearchServerErrors: [%d] failed to read body: %v", caseNum, err)
 		}
@@ -229,7 +229,7 @@ func TestSearchServerPatchDataSet(t *testing.T) {
 		w := httptest.NewRecorder()
 		SearchServer(w, req)
 		resp := w.Result()
-		body, err := ioutil.ReadAll(resp.Body)
+		body, err := io.ReadAll(resp.Body)
 		if err != nil {
 			t.Errorf("In TestSearchServerPatchDataSet: [%d] failed to read body: %v", caseNum, err)
 		}
@@ -263,7 +263,7 @@ func TestSearchServerSpecificError(t *testing.T) {
 	w := httptest.NewRecorder()
 	SearchServer(w, nil)
 	resp := w.Result()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Errorf("In TestSearchServerSpecificError: test on (*http.Request == nil) failed to read body: %v", err)
 	}
